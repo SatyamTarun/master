@@ -6,11 +6,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -27,9 +29,17 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener,
         GoogleMap.OnMyLocationClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -39,6 +49,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     LocationRequest mLocationRequest;
     Location mLastLocation;
     Marker mCurrLocationMarker;
+    private boolean isGPS;
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +59,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
+
+       // String value = getIntent().getExtras().getString("Data");
+
+        new GpsUtils(this).turnGPSOn(new GpsUtils.onGpsListener() {
+            @Override
+            public void gpsStatus(boolean isGPSEnable) {
+                // turn on GPS
+                isGPS = isGPSEnable;
+            }
+        });
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(MapActivity.this);
         enableMyLocation();
@@ -74,24 +96,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
 
         LatLng delhi = new LatLng(28.6466773,76.813073);
-//        mMap.addMarker(new MarkerOptions().position(banglore).title("Name:Satyam, Ph:7204594039,Need Help:Food")
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-//        mMap.addMarker(new MarkerOptions().position(banglore).title("marker title").snippet("marker info")
-//                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher_foreground)));
 
 
 
 
         enableMyLocation();
-       // mMap.setMyLocationEnabled(true);
         mMap.setOnMyLocationButtonClickListener(MapActivity.this);
         mMap.setOnMyLocationClickListener(MapActivity.this);
-        // Add a marker in Sydney and move the camera
-        LatLng   banglore = new LatLng(wayLatitude,wayLongitude);
+
+        LatLng   current = new LatLng(wayLatitude,wayLongitude);
         mMap.addMarker(new MarkerOptions()
                 .position(delhi)
                 .title("Delhi"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(delhi));
+        mMap.addMarker(new MarkerOptions()
+                .position(current)
+                .title("My Location"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(current));
 
     }
     LocationCallback mLocationCallback = new LocationCallback() {
@@ -103,6 +123,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 Location location = locationList.get(locationList.size() - 1);
                 Log.i("MapsActivity", "Location: " + location.getLatitude() + " " + location.getLongitude());
                 mLastLocation = location;
+                wayLatitude=location.getLatitude();
+                wayLongitude=location.getLongitude();
+                addLocation(location.getLatitude(), location.getLongitude());
                 if (mCurrLocationMarker != null) {
                     mCurrLocationMarker.remove();
                 }
@@ -120,6 +143,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1) {
+                isGPS = true; // flag maintain before get location
+            }
+        }
+    }
 
     @Override
     public boolean onMyLocationButtonClick() {
@@ -162,5 +195,46 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             mMap.setMyLocationEnabled(true);
 
         }
+    }
+
+    private void readData() {
+        db.collection("users")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                Log.d("Got Data", document.getId() + " => " + document.getData());
+                            }
+                        } else {
+                            Log.w("No Data", "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+    }
+
+    private void addLocation(double latitude, double longitude) {
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("lat", latitude);
+        user.put("long", longitude);
+
+// Add a new document with a given ID
+        db.collection("users").document(Settings.Secure.getString(this.getContentResolver(),
+                Settings.Secure.ANDROID_ID))
+                .update(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Document Added", "DocumentSnapshot added with ID: ");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Not Added", "Error adding document", e);
+                    }
+                });
     }
 }

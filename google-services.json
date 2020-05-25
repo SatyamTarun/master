@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "666569988996",
+    "firebase_url": "https://sevahetu-7204594039.firebaseio.com",
+    "project_id": "sevahetu-7204594039",
+    "storage_bucket": "sevahetu-7204594039.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666569988996:android:98d81723f4dc7de8cb9bd1",
+        "android_client_info": {
+          "package_name": "com.namo.sevahetu"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "666569988996-d7md8d8r7304ugsn488cvduoodhqauqa.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.namo.sevahetu",
+            "certificate_hash": "394f798867b00f6ff62b31a1c5faeff9e0f8c593"
+          }
+        },
+        {
+          "client_id": "666569988996-nsu7ttc69gicrlo7jtqpdd5ujbhk07eh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEyHfZ475a_Xj2b23y7-_w1q6WjCrHBm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "666569988996-nsu7ttc69gicrlo7jtqpdd5ujbhk07eh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

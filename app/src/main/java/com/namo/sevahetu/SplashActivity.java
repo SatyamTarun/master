@@ -26,20 +26,49 @@ import java.util.Locale;
 public class SplashActivity extends AppCompatActivity {
 
 
+    private boolean isGPS;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
-        new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
 
-                            startActivity(new Intent(SplashActivity.this, LaunchActivity.class));
-                            finish();
-                        }
-                    }, 2000);
+        new GpsUtils(this).turnGPSOn(new GpsUtils.onGpsListener() {
+            @Override
+            public void gpsStatus(boolean isGPSEnable) {
+                // turn on GPS
+                isGPS = isGPSEnable;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        startActivity(new Intent(SplashActivity.this, LaunchActivity.class));
+                        finish();
+                    }
+                }, 2000);
+            }
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == 1) {
+                isGPS = true; // flag maintain before get location
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        startActivity(new Intent(SplashActivity.this, LaunchActivity.class));
+                        finish();
+                    }
+                }, 2000);
+            }
+        }
     }
 
 //    @Override
