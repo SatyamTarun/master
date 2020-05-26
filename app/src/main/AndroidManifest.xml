@@ -18,7 +18,7 @@
         <activity android:name=".MapActivity"></activity>
         <activity
             android:name=".LaunchActivity"
-            android:label="@string/title_activity_launch"
+            android:label="@string/register"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".SplashActivity"

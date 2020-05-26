@@ -6,9 +6,68 @@
     <string name="login">Login</string>
     <string name="password">Password</string>
     <string name="e_mail">Email</string>
-    <string name="tag">Let\'s join us and \nBuild your relationship with others</string>
+    <!--<string name="tag">Let\'s join us and \nBuild your relationship with others</string>-->
+    <string name="tag">Fill your details to display</string>
     <string name="swipe_right_for_login">Swipe Right for Login</string>
     <string name="register">Register</string>
+    <string name="your_details">Your details</string>
     <string name="re_type_password">Re-type Password</string>
-    <string name="your_name">Full Name</string>
+    <string name="your_name">Your Name</string>
+    <string name="full_name">Full Name</string>
+    <string name="your_contact_number">Your Contact Number</string>
+    <string name="contact_number">Contact Number</string>
+    <string name="your_state">Your State</string>
+    <string name="your_need">What you need</string>
+    <string name="details">Details</string>
+
+    <string-array name="state_array">
+        <item>--Your State--</item>
+        <item>Andhra Pradesh</item>
+        <item>Arunachal Pradesh</item>
+        <item>Assam</item>
+        <item>Bihar</item>
+        <item>Chhattisgarh</item>
+        <item>Goa</item>
+        <item>Gujarat</item>
+        <item>Haryana</item>
+        <item>Himachal Pradesh</item>
+        <item>Jharkhand</item>
+        <item>Karnataka</item>
+        <item>Kerala</item>
+        <item>Madhya Pradesh</item>
+        <item>Maharashtra</item>
+        <item>Manipur</item>
+        <item>Meghalaya</item>
+        <item>Mizoram</item>
+        <item>Nagaland</item>
+        <item>Odisha</item>
+        <item>Punjab</item>
+        <item>Rajasthan</item>
+        <item>Sikkim</item>
+        <item>Tamil Nadu</item>
+        <item>Telangana</item>
+        <item>Tripura</item>
+        <item>Uttar Pradesh</item>
+        <item>Uttarakhand</item>
+        <item>West Bengal</item>
+        <item>Andaman and Nicobar Islands</item>
+        <item>Chandigarh</item>
+        <item>Dadra and Nagar Haveli and Daman and Diu</item>
+        <item>Delhi</item>
+        <item>Jammu and Kashmir</item>
+        <item>Lakshadweep</item>
+        <item>Puducherry</item>
+        <item>Ladakh</item>
+    </string-array>
+
+    <string-array name="requirment_array">
+        <item>--Your Requirement--</item>
+        <item>Food</item>
+        <item>Housing</item>
+        <item>Transportation</item>
+        <item>Healthcare</item>
+        <item>Childcare</item>
+        <item>Education</item>
+        <item>Cash</item>
+    </string-array>
 </resources>
